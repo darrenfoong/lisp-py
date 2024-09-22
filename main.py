@@ -87,8 +87,8 @@ def standard_env() -> Env:
             "append": op.add,
             "apply": lambda proc, args: proc(*args),
             "begin": lambda *x: x[-1],
-            "car": lambda x: x[0],
-            "cdr": lambda x: x[1:],
+            "head": lambda x: x[0], # originally car
+            "tail": lambda x: x[1:], # originally cdr
             "cons": lambda x, y: [x] + y,
             "eq?": op.is_,
             "expt": pow,
@@ -118,7 +118,7 @@ def eval(x, env=global_env):
     "Evaluate an expression in an environment."
     if isinstance(x, Symbol):  # variable reference
         return env.find(x)[x]
-    elif isinstance(x, List) and len(x) == 0:
+    elif isinstance(x, List) and len(x) == 0: # empty list
         return x
     elif not isinstance(x, List):  # constant
         return x

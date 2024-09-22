@@ -3,7 +3,7 @@
     (if
       (equal? xs ())
       ()
-      (cons (f (car xs)) (map f (cdr xs)))
+      (cons (f (head xs)) (map f (tail xs)))
     )
   )
 )

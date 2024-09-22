@@ -3,7 +3,7 @@
     (if
       (equal? xs ())
       0
-      (+ 1 (len (cdr xs)))
+      (+ 1 (len (tail xs)))
     )
   )
 )
