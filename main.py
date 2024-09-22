@@ -8,28 +8,6 @@ List = list
 Exp = (Atom, List)
 
 
-class Env(dict):
-    "An environment: a dict of {'var': val} pairs, with an outer Env."
-
-    def __init__(self, params=(), args=(), outer=None):
-        self.update(zip(params, args))
-        self.outer = outer
-
-    def find(self, var):
-        "Find the innermost Env where var appears."
-        return self if (var in self) else self.outer.find(var)
-
-
-class Procedure(object):
-    "A user-defined Scheme procedure."
-
-    def __init__(self, parms, body, env):
-        self.parms, self.body, self.env = parms, body, env
-
-    def __call__(self, *args):
-        return eval(self.body, Env(self.parms, args, self.env))
-
-
 def tokenize(chars: str) -> list:
     "Convert a string of characters into a list of tokens."
     return chars.replace("(", " ( ").replace(")", " ) ").split()
@@ -66,6 +44,28 @@ def atom(token: str) -> Atom:
             return float(token)
         except ValueError:
             return Symbol(token)
+
+
+class Env(dict):
+    "An environment: a dict of {'var': val} pairs, with an outer Env."
+
+    def __init__(self, params=(), args=(), outer=None):
+        self.update(zip(params, args))
+        self.outer = outer
+
+    def find(self, var):
+        "Find the innermost Env where var appears."
+        return self if (var in self) else self.outer.find(var)
+
+
+class Procedure(object):
+    "A user-defined Scheme procedure."
+
+    def __init__(self, params, body, env):
+        self.params, self.body, self.env = params, body, env
+
+    def __call__(self, *args):
+        return eval(self.body, Env(self.params, args, self.env))
 
 
 def standard_env() -> Env:
