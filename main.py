@@ -122,7 +122,6 @@ def eval(x, env=global_env):
         return x
     elif not isinstance(x, List):  # constant
         return x
-    print(x)
     op, *args = x
     if op == "if":  # conditional
         (test, conseq, alt) = args
@@ -140,11 +139,21 @@ def eval(x, env=global_env):
         return proc(*vals)
 
 
-def repl(prompt="lis.py> "):
+def repl(prompt="lisp-py> "):
     "A prompt-read-eval-print loop."
     while True:
         try:
-            val = eval(parse(input(prompt)))
+            input_str = input(prompt)
+
+            if input_str.startswith("load"):
+                input_str_split = input_str.split(" ")
+                if len(input_str_split) != 2:
+                    print("error: load requires a file path")
+                    continue
+                with open(f"{input_str_split[1]}.lisp", "r") as f:
+                    input_str = f.read()
+
+            val = eval(parse(input_str))
             if val is not None:
                 print(schemestr(val))
         except KeyboardInterrupt:
