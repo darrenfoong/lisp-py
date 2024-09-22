@@ -3,7 +3,10 @@
 ## Running
 
 ```
-TODO
+python -m main
+lisp-py> load fac
+lisp-py> (fac 10)
+3628800
 ```
 
 ## Notes
