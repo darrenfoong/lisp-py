@@ -8,17 +8,12 @@ List = list
 Exp = (Atom, List)
 
 
-def tokenize(chars: str) -> list:
+def lex(chars: str) -> list:
     "Convert a string of characters into a list of tokens."
     return chars.replace("(", " ( ").replace(")", " ) ").split()
 
 
-def parse(program: str) -> Exp:
-    "Read a Scheme expression from a string."
-    return read_from_tokens(tokenize(program))
-
-
-def read_from_tokens(tokens: list) -> Exp:
+def parse(tokens: list) -> Exp:
     "Read an expression from a sequence of tokens."
     if len(tokens) == 0:
         raise SyntaxError("unexpected EOF")
@@ -26,7 +21,7 @@ def read_from_tokens(tokens: list) -> Exp:
     if token == "(":
         L = []
         while tokens[0] != ")":
-            L.append(read_from_tokens(tokens))
+            L.append(parse(tokens))
         tokens.pop(0)  # pop off ')'
         return L
     elif token == ")":
@@ -151,9 +146,9 @@ def repl(prompt="lisp-py> "):
                 with open(f"{input_str_split[1]}.lisp", "r") as f:
                     input_str = f.read()
 
-            val = eval(parse(input_str))
+            val = eval(parse(lex(input_str)))
             if val is not None:
-                print(schemestr(val))
+                print(scheme_str(val))
         except KeyboardInterrupt:
             print("\nBye")
             return
@@ -161,10 +156,10 @@ def repl(prompt="lisp-py> "):
             print(e)
 
 
-def schemestr(exp):
+def scheme_str(exp) -> str:
     "Convert a Python object back into a Scheme-readable string."
     if isinstance(exp, List):
-        return "(" + " ".join(map(schemestr, exp)) + ")"
+        return "(" + " ".join(map(scheme_str, exp)) + ")"
     else:
         return str(exp)
 
