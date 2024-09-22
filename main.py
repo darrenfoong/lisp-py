@@ -142,15 +142,18 @@ def repl(prompt="lisp-py> "):
 
             if input_str.startswith("load"):
                 input_str_split = input_str.split(" ")
-                if len(input_str_split) != 2:
+                if len(input_str_split) < 2:
                     print("error: load requires a file path")
                     continue
-                with open(f"{input_str_split[1]}.lisp", "r") as f:
-                    input_str = f.read()
-
-            val = eval(parse(lex(input_str)))
-            if val is not None:
-                print(scheme_str(val))
+                for i in range(1, len(input_str_split)):
+                    with open(f"{input_str_split[i]}.lisp", "r") as f:
+                        val = eval(parse(lex(f.read())))
+                        if val is not None:
+                            print(scheme_str(val))
+            else:
+                val = eval(parse(lex(input_str)))
+                if val is not None:
+                    print(scheme_str(val))
         except KeyboardInterrupt:
             print("\nBye")
             return
