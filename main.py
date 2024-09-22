@@ -127,6 +127,8 @@ def eval(x, env=global_env):
         (params, body) = args
         return Procedure(params, body, env)
     else:  # procedure call
+        if len(args) == 0:
+            return x
         proc = eval(op, env)
         vals = [eval(arg, env) for arg in args]
         return proc(*vals)
