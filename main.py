@@ -8,12 +8,12 @@ List = list
 Exp = (Atom, List)
 
 
-def lex(chars: str) -> list:
+def lex(chars: str) -> list[str]:
     "Convert a string of characters into a list of tokens."
     return chars.replace("(", " ( ").replace(")", " ) ").split()
 
 
-def parse(tokens: list) -> Exp:
+def parse(tokens: list[str]) -> Exp:
     "Read an expression from a sequence of tokens."
     if len(tokens) == 0:
         raise SyntaxError("unexpected EOF")
@@ -136,6 +136,7 @@ def eval(x, env=global_env):
 
 def repl(prompt="lisp-py> "):
     "A prompt-read-eval-print loop."
+    pretty_print = False
     while True:
         try:
             input_str = input(prompt)
@@ -149,11 +150,20 @@ def repl(prompt="lisp-py> "):
                     with open(f"{input_str_split[i]}.lisp", "r") as f:
                         val = eval(parse(lex(f.read())))
                         if val is not None:
-                            print(scheme_str(val))
+                            print(scheme_str(val, pretty_print))
+            elif input_str == "pretty on":
+                pretty_print = True
+            elif input_str == "pretty off":
+                pretty_print = False
             else:
-                val = eval(parse(lex(input_str)))
+                parsed = parse(lex(input_str))
+                if pretty_print:
+                    print("---Input start---")
+                    print(scheme_str(parsed, pretty_print))
+                    print("----Input end----")
+                val = eval(parsed)
                 if val is not None:
-                    print(scheme_str(val))
+                    print(scheme_str(val, pretty_print))
         except KeyboardInterrupt:
             print("\nBye")
             return
@@ -161,12 +171,30 @@ def repl(prompt="lisp-py> "):
             print(e)
 
 
-def scheme_str(exp) -> str:
+def scheme_str(exp, pretty_print, n=0) -> str:
     "Convert a Python object back into a Scheme-readable string."
-    if isinstance(exp, List):
-        return "(" + " ".join(map(scheme_str, exp)) + ")"
+    if pretty_print:
+        if isinstance(exp, List):
+            res = " " * n + "(\n"
+            for i in range(len(exp)):
+                res += scheme_str(exp[i], pretty_print, n + 1)
+                if i < len(exp) - 1:
+                    res += "\n"
+            res += "\n" + " " * n + ")"
+            return res
+        else:
+            return " " * n + str(exp)
     else:
-        return str(exp)
+        if isinstance(exp, List):
+            res = "("
+            for i in range(len(exp)):
+                res += scheme_str(exp[i], pretty_print)
+                if i < len(exp) - 1:
+                    res += " "
+            res += ")"
+            return res
+        else:
+            return str(exp)
 
 
 if __name__ == "__main__":
