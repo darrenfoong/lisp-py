@@ -8,9 +8,43 @@ List = list
 Exp = (Atom, List)
 
 
+class String(str):
+    pass
+
+
+QUOTE = '"'
+
+
 def lex(chars: str) -> list[str]:
     "Convert a string of characters into a list of tokens."
-    return chars.replace("(", " ( ").replace(")", " ) ").split()
+    tokens = []
+    token = ""
+    in_string = False
+    for char in chars:
+        if char == QUOTE:
+            if not in_string:
+                in_string = True
+                tokens.append(token)
+                token = QUOTE
+            else:
+                in_string = False
+                token += QUOTE
+                tokens.append(token)
+                token = ""
+        else:
+            token += char
+
+    tokens.append(token)
+
+    final_tokens = []
+    for t in tokens:
+        if t.startswith(QUOTE) and t.endswith(QUOTE):
+            final_tokens.append(t)
+        else:
+            token_split = t.replace("(", " ( ").replace(")", " ) ").split()
+            final_tokens += token_split
+
+    return final_tokens
 
 
 def parse(tokens: list[str]) -> Exp:
@@ -38,7 +72,10 @@ def atom(token: str) -> Atom:
         try:
             return float(token)
         except ValueError:
-            return Symbol(token)
+            if token.startswith(QUOTE) and token.endswith(QUOTE):
+                return String(token[1:-1])
+            else:
+                return Symbol(token)
 
 
 class Env(dict):
@@ -109,7 +146,9 @@ global_env = standard_env()
 
 def eval(x, env=global_env):
     "Evaluate an expression in an environment."
-    if isinstance(x, Symbol):  # variable reference
+    if isinstance(x, String):  # string
+        return x
+    elif isinstance(x, Symbol):  # variable reference
         return env.find(x)[x]
     elif isinstance(x, List) and len(x) == 0:  # empty list
         return x
@@ -182,6 +221,8 @@ def scheme_str(exp, pretty_print, n=0) -> str:
                     res += "\n"
             res += "\n" + " " * n + ")"
             return res
+        elif isinstance(exp, String):
+            return " " * n + f'"{exp}"'
         else:
             return " " * n + str(exp)
     else:
@@ -193,6 +234,8 @@ def scheme_str(exp, pretty_print, n=0) -> str:
                     res += " "
             res += ")"
             return res
+        elif isinstance(exp, String):
+            return f'"{exp}"'
         else:
             return str(exp)
 
