@@ -72,7 +72,7 @@ class Env(dict):
         if var in self:
             return self[var]
         else:
-            # Exercise 3: raise a RuntimeError if variable does not exist
+            # Exercise 2: raise a RuntimeError if variable does not exist
             return self.outer.find(var)
 
 
@@ -133,7 +133,6 @@ def eval(x, env=standard_env()):
         (params, body) = args
         return Procedure(params, body, env)
     else:  # procedure call
-        # Exercise 2: allow passing of func symbols as variables
         proc = eval(op, env)
         vals = [eval(arg, env) for arg in args]
         return proc(*vals)
