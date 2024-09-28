@@ -48,7 +48,7 @@ def parse(tokens: list[str]) -> Exp:
 
 
 def atom(token: str) -> Atom:
-    "Numbers become numbers; every other token is a symbol."
+    "Numbers become numbers; every other token is a symbol or string."
     try:
         return int(token)
     except ValueError:
