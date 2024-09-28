@@ -17,34 +17,17 @@ QUOTE = '"'
 
 def lex(chars: str) -> list[str]:
     "Convert a string of characters into a list of tokens."
+    # without support for strings, the implementation is easy:
+    # return chars.replace("(", " ( ").replace(")", " ) ").split()
     tokens = []
-    token = ""
-    in_string = False
-    for char in chars:
-        if char == QUOTE:
-            if not in_string:
-                in_string = True
-                tokens.append(token)
-                token = QUOTE
-            else:
-                in_string = False
-                token += QUOTE
-                tokens.append(token)
-                token = ""
-        else:
-            token += char
+    chars_split = chars.split(QUOTE)
+    for i in range(0, len(chars_split)):
+        if i % 2 == 0:  # not in a string
+            tokens += chars_split[i].replace("(", " ( ").replace(")", " ) ").split()
+        else:  # in a string
+            tokens.append(f"{QUOTE}{chars_split[i]}{QUOTE}")
 
-    tokens.append(token)
-
-    final_tokens = []
-    for t in tokens:
-        if t.startswith(QUOTE) and t.endswith(QUOTE):
-            final_tokens.append(t)
-        else:
-            token_split = t.replace("(", " ( ").replace(")", " ) ").split()
-            final_tokens += token_split
-
-    return final_tokens
+    return tokens
 
 
 def parse(tokens: list[str]) -> Exp:
