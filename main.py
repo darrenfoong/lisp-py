@@ -72,6 +72,8 @@ class Env(dict):
         if var in self:
             return self[var]
         else:
+            if self.outer is None:
+                raise RuntimeError(f'cannot find variable "{var}"')
             return self.outer.find(var)
 
 
