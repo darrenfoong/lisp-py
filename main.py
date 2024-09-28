@@ -132,6 +132,7 @@ def standard_env() -> Env:
             "not": op.not_,
             "null?": lambda x: x == [],
             "number?": lambda x: isinstance(x, Number),
+            "number": atom,
             "print": print,
             "procedure?": callable,
             "round": round,
