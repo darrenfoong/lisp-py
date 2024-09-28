@@ -143,7 +143,6 @@ def eval(x, env=global_env):
 
 def repl(prompt="lisp-py> "):
     "A prompt-read-eval-print loop."
-    pretty_print = False
     while True:
         try:
             input_str = input(prompt)
@@ -159,20 +158,11 @@ def repl(prompt="lisp-py> "):
                         for block in blocks:
                             val = eval(parse(lex(block)))
                             if val is not None:
-                                print(scheme_str(val, pretty_print))
-            elif input_str == "pretty on":
-                pretty_print = True
-            elif input_str == "pretty off":
-                pretty_print = False
+                                print(scheme_str(val))
             else:
-                parsed = parse(lex(input_str))
-                if pretty_print:
-                    print("---Input start---")
-                    print(scheme_str(parsed, pretty_print))
-                    print("----Input end----")
-                val = eval(parsed)
+                val = eval(parse(lex(input_str)))
                 if val is not None:
-                    print(scheme_str(val, pretty_print))
+                    print(scheme_str(val))
         except KeyboardInterrupt:
             print("\nBye")
             return
@@ -180,34 +170,14 @@ def repl(prompt="lisp-py> "):
             print(e)
 
 
-def scheme_str(exp, pretty_print, n=0) -> str:
+def scheme_str(exp) -> str:
     "Convert a Python object back into a Scheme-readable string."
-    if pretty_print:
-        if isinstance(exp, List):
-            res = " " * n + "(\n"
-            for i in range(len(exp)):
-                res += scheme_str(exp[i], pretty_print, n + 1)
-                if i < len(exp) - 1:
-                    res += "\n"
-            res += "\n" + " " * n + ")"
-            return res
-        elif isinstance(exp, String):
-            return " " * n + f'"{exp}"'
-        else:
-            return " " * n + str(exp)
+    if isinstance(exp, List):
+        return "(" + " ".join(map(scheme_str, exp)) + ")"
+    elif isinstance(exp, String):
+        return f'"{exp}"'
     else:
-        if isinstance(exp, List):
-            res = "("
-            for i in range(len(exp)):
-                res += scheme_str(exp[i], pretty_print)
-                if i < len(exp) - 1:
-                    res += " "
-            res += ")"
-            return res
-        elif isinstance(exp, String):
-            return f'"{exp}"'
-        else:
-            return str(exp)
+        return str(exp)
 
 
 if __name__ == "__main__":
