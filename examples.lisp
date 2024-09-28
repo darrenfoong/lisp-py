@@ -1,7 +1,7 @@
 (define len
   (lambda (xs)
     (if
-      (equal? xs ())
+      (= xs ())
       0
       (+ 1 (len (tail xs)))
     )
@@ -31,7 +31,7 @@
 (define seq
    (lambda (n)
      (if
-       (equal? n 0)
+       (= n 0)
        ()
        (cons n (seq (- n 1)))
      )

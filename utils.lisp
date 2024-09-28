@@ -1,7 +1,7 @@
 (define map
   (lambda (f xs)
     (if
-      (equal? xs ())
+      (= xs ())
       ()
       (cons (f (head xs)) (map f (tail xs)))
     )
@@ -11,7 +11,7 @@
 (define foldl
   (lambda (f e xs)
     (if
-      (equal? xs ())
+      (= xs ())
       e
       (foldl f (f e (head xs)) (tail xs)))
     )
@@ -21,7 +21,7 @@
 (define foldr
   (lambda (f e xs)
     (if
-      (equal? xs ())
+      (= xs ())
       e
       (f (head xs) (foldr f e (tail xs)))
     )
@@ -55,7 +55,7 @@
 (define foldls
   (lambda (f e xs)
     (if
-      (equal? xs "")
+      (= xs "")
       e
       (foldls f (f e (head xs)) (tail xs)))
     )

@@ -1,10 +1,10 @@
 (define lexinner
   (lambda (token chars)
     (if
-      (equal? chars "")
+      (= chars "")
       (list token)
       (if
-        (equal? (head chars) " ")
+        (= (head chars) " ")
         (cons token (lexinner "" (tail chars)))
         (lexinner (append (head chars) token) (tail chars))
       )
@@ -30,13 +30,13 @@
 ---
 (define eval
   (lambda (exp)
-    (if (equal? (head exp) "+")
+    (if (= (head exp) "+")
       (+ (head (tail exp)) (head (rev exp)))
-      (if (equal? (head exp) "-")
+      (if (= (head exp) "-")
         (- (head (tail exp)) (head (rev exp)))
-        (if (equal? (head exp) "*")
+        (if (= (head exp) "*")
           (* (head (tail exp)) (head (rev exp)))
-          (if (equal? (head exp) "/")
+          (if (= (head exp) "/")
             (/ (head (tail exp)) (head (rev exp)))
             ("oops")
           )

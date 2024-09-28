@@ -103,7 +103,6 @@ def standard_env() -> Env:
             "head": lambda x: x[0],  # originally car
             "tail": lambda x: x[1:],  # originally cdr
             "cons": lambda x, y: [x] + y,
-            "equal?": op.eq,
             "list": lambda *x: List(x),
             "number": atom,  # abused to cast strings to numbers
         }
