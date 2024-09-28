@@ -86,7 +86,6 @@ class Procedure(object):
 
 
 def standard_env() -> Env:
-    "An environment with some Scheme standard procedures."
     env = Env()
     env.update(
         {
