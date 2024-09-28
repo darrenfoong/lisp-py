@@ -1,4 +1,3 @@
-import math
 import operator as op
 
 Symbol = str
@@ -86,7 +85,6 @@ class Procedure(object):
 def standard_env() -> Env:
     "An environment with some Scheme standard procedures."
     env = Env()
-    env.update(vars(math))  # sin, cos, sqrt, pi, ...
     env.update(
         {
             "+": op.add,
@@ -98,28 +96,14 @@ def standard_env() -> Env:
             ">=": op.ge,
             "<=": op.le,
             "=": op.eq,
-            "abs": abs,
             "append": op.add,
-            "apply": lambda proc, args: proc(*args),
             "begin": lambda *x: x[-1],
             "head": lambda x: x[0],  # originally car
             "tail": lambda x: x[1:],  # originally cdr
             "cons": lambda x, y: [x] + y,
-            "eq?": op.is_,
-            "expt": pow,
             "equal?": op.eq,
             "list": lambda *x: List(x),
-            "list?": lambda x: isinstance(x, List),
-            "max": max,
-            "min": min,
-            "not": op.not_,
-            "null?": lambda x: x == [],
-            "number?": lambda x: isinstance(x, Number),
-            "number": atom,
-            "print": print,
-            "procedure?": callable,
-            "round": round,
-            "symbol?": lambda x: isinstance(x, Symbol),
+            "number": atom,  # abused to cast strings to numbers
         }
     )
     return env
