@@ -68,8 +68,11 @@ class Env(dict):
         self.outer = outer
 
     def find(self, var):
-        "Find the innermost Env where var appears."
-        return self if (var in self) else self.outer.find(var)
+        "Find var in the innermost Env where it appears."
+        if var in self:
+            return self[var]
+        else:
+            return self.outer.find(var)
 
 
 class Procedure(object):
@@ -117,7 +120,7 @@ def eval(x, env=global_env):
     if isinstance(x, String):  # string
         return x
     elif isinstance(x, Symbol):  # variable reference
-        return env.find(x)[x]
+        return env.find(x)
     elif isinstance(x, List) and len(x) == 0:  # empty list
         return x
     elif not isinstance(x, List):  # constant
