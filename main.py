@@ -187,9 +187,11 @@ def repl(prompt="lisp-py> "):
                     continue
                 for i in range(1, len(input_str_split)):
                     with open(f"{input_str_split[i]}.lisp", "r") as f:
-                        val = eval(parse(lex(f.read())))
-                        if val is not None:
-                            print(scheme_str(val, pretty_print))
+                        blocks = f.read().split("---")
+                        for block in blocks:
+                            val = eval(parse(lex(block)))
+                            if val is not None:
+                                print(scheme_str(val, pretty_print))
             elif input_str == "pretty on":
                 pretty_print = True
             elif input_str == "pretty off":
