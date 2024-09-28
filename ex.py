@@ -16,17 +16,9 @@ QUOTE = '"'
 
 def lex(chars: str) -> list[str]:
     "Convert a string of characters into a list of tokens."
-    # without support for strings, the implementation is easy:
-    # return chars.replace("(", " ( ").replace(")", " ) ").split()
-    tokens = []
-    chars_split = chars.split(QUOTE)
-    for i in range(0, len(chars_split)):
-        if i % 2 == 0:  # not in a string
-            tokens += chars_split[i].replace("(", " ( ").replace(")", " ) ").split()
-        else:  # in a string
-            tokens.append(f"{QUOTE}{chars_split[i]}{QUOTE}")
-
-    return tokens
+    # Exercise 3: handle strings with spaces
+    # Example: (tail "hello world")
+    return chars.replace("(", " ( ").replace(")", " ) ").split()
 
 
 def parse(tokens: list[str]) -> Exp:
@@ -73,6 +65,7 @@ class Env(dict):
             return self[var]
         else:
             # Exercise 2: raise a RuntimeError if variable does not exist
+            # Example: (what)
             return self.outer.find(var)
 
 
