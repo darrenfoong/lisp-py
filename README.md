@@ -4,6 +4,15 @@
 
 ```
 python -m main
+lisp-py> (+ 1 1)
+2
+lisp-py> (begin (define a 2) (define b 3) (* a b))
+6
+lisp-py> (define xs (list 1 2 3))
+lisp-py> (head xs)
+1
+lisp-py> (tail xs)
+(2 3)
 lisp-py> load examples
 lisp-py> (len (list 1 2 3))
 3
