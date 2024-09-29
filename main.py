@@ -1,14 +1,15 @@
 import operator as op
 
-Symbol = str
+
+class Symbol(str):
+    pass
+
+
+String = str
 Number = (int, float)
-Atom = (Symbol, Number)
+Atom = (Symbol, String, Number)
 List = list
 Exp = (Atom, List)
-
-
-class String(str):
-    pass
 
 
 QUOTE = '"'
@@ -117,15 +118,15 @@ global_env = standard_env()
 
 def eval(x, env=global_env):
     "Evaluate an expression in an environment."
-    if isinstance(x, String):  # string
-        return x
-    elif isinstance(x, Symbol):  # variable reference
+    if isinstance(x, Symbol):  # variable reference
         return env.find(x)
+    elif isinstance(x, String):  # string
+        return x
     elif isinstance(x, List) and len(x) == 0:  # empty list
         return x
     elif not isinstance(x, List):  # constant
         return x
-    op, *args = x
+    op, *args = x  # otherwise a list
     if op == "if":  # conditional
         (test, conseq, alt) = args
         exp = conseq if eval(test, env) else alt
