@@ -104,7 +104,10 @@ def standard_env() -> Env:
     return env
 
 
-def eval(x, env=standard_env()):
+global_env = standard_env()
+
+
+def eval(x, env=global_env):
     "Evaluate an expression in an environment."
     if isinstance(x, String):  # string
         return x
